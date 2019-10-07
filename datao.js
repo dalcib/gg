@@ -60,12 +60,12 @@
   // Random purchases by four different groups
   gg.sampleData.purchases = (function() {
     var names = ['foo', 'bar', 'baz', 'quux']
-    var randomMeans = d3.randomNormal(200, 10)
+    var randomMeans = d3.random.normal(200, 10)
     var groups = _.map(names, function(n) {
       var mean = randomMeans()
       return {
         name: n,
-        rng: d3.randomNormal(mean, mean / 3),
+        rng: d3.random.normal(mean, mean / 3),
       }
     })
 
@@ -97,9 +97,9 @@
   // Random height weight data for binned histogram and scatter plot
   gg.sampleData.heightWeight = (function() {
     // Some random variables.
-    var randomHeight = d3.randomNormal(66, 18)
-    var randomBMI = d3.randomNormal(21.75, 3)
-    var standardNormal = d3.randomNormal()
+    var randomHeight = d3.random.normal(66, 18)
+    var randomBMI = d3.random.normal(21.75, 3)
+    var standardNormal = d3.random.normal()
 
     return _.map(_.range(20000), function() {
       var inches = randomHeight()
@@ -114,12 +114,12 @@
   // Random data for box plot graphic
   gg.sampleData.forBoxPlots = (function() {
     var names = ['a', 'b', 'c', 'd']
-    var randomMeans = d3.randomNormal(500, 100)
-    var randomStddevs = d3.randomNormal(150, 20)
-    var outlierRates = d3.randomNormal(0.01, 0.001)
+    var randomMeans = d3.random.normal(500, 100)
+    var randomStddevs = d3.random.normal(150, 20)
+    var outlierRates = d3.random.normal(0.01, 0.001)
 
     function makeRNG(mean, stddev, outlierRate) {
-      var baseRNG = d3.randomNormal(mean, stddev)
+      var baseRNG = d3.random.normal(mean, stddev)
       return function() {
         var r = baseRNG()
         var sign = Math.abs(r - mean) / (r - mean)
@@ -144,13 +144,13 @@
     var groups = [
       {
         name: 'zorks',
-        rng1: d3.randomNormal(100, 15),
-        rng2: d3.randomNormal(0, 0.1),
+        rng1: d3.random.normal(100, 15),
+        rng2: d3.random.normal(0, 0.1),
       },
       {
         name: 'florgs',
-        rng1: d3.randomNormal(90, 20),
-        rng2: d3.randomNormal(0, 0.2),
+        rng1: d3.random.normal(90, 20),
+        rng2: d3.random.normal(0, 0.2),
       },
     ]
 
@@ -167,10 +167,10 @@
   })()
 
   gg.sampleData.quadrants = (function() {
-    var randomX = d3.randomNormal(500, 100)
-    var randomY = d3.randomNormal(200, 50)
-    var randomSize = d3.randomNormal(10, 2)
-    var randomId = d3.randomNormal(1000, 100)
+    var randomX = d3.random.normal(500, 100)
+    var randomY = d3.random.normal(200, 50)
+    var randomSize = d3.random.normal(10, 2)
+    var randomId = d3.random.normal(1000, 100)
 
     return _.map(_.range(50), function() {
       return {
@@ -194,27 +194,27 @@
 
     var pay = {
       Male: {
-        Programmer: d3.randomNormal(30, 5),
-        Manager: d3.randomNormal(50, 10),
-        Designer: d3.randomNormal(20, 5),
+        Programmer: d3.random.normal(30, 5),
+        Manager: d3.random.normal(50, 10),
+        Designer: d3.random.normal(20, 5),
       },
       Female: {
-        Programmer: d3.randomNormal(25, 4),
-        Manager: d3.randomNormal(40, 12),
-        Designer: d3.randomNormal(20, 6),
+        Programmer: d3.random.normal(25, 4),
+        Manager: d3.random.normal(40, 12),
+        Designer: d3.random.normal(20, 6),
       },
     }
 
     var experience = {
       Male: {
-        Programmer: d3.randomNormal(10, 3),
-        Manager: d3.randomNormal(15, 5),
-        Designer: d3.randomNormal(5, 2),
+        Programmer: d3.random.normal(10, 3),
+        Manager: d3.random.normal(15, 5),
+        Designer: d3.random.normal(5, 2),
       },
       Female: {
-        Programmer: d3.randomNormal(7, 4),
-        Manager: d3.randomNormal(10, 4),
-        Designer: d3.randomNormal(6, 3),
+        Programmer: d3.random.normal(7, 4),
+        Manager: d3.random.normal(10, 4),
+        Designer: d3.random.normal(6, 3),
       },
     }
 

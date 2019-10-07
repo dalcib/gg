@@ -26,7 +26,7 @@
             { type: 'color', aesthetic: 'color' }
         ],
     });
-    chart.render(1000, 600, d3.select('#chart'), codestats)
+    chart(codestats, d3.select('#chart'), { width: 300, height: 200, padding: 35 })
 </script>
 </body>
 </html>

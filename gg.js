@@ -99,15 +99,15 @@
 
         var scales = makeScales(this.scaleSpecs, this.layers, this.aesthetics, scaleData || data, width, height, paddingX, paddingY);
 
-        var xAxis = d3.svg.axis()
-            .scale(scales['x'].d3Scale)
-            .tickSize(2 * paddingY - height)
-            .orient('bottom');
+        var xAxis = d3
+          .axisBottom()
+          .scale(scales['x'].d3Scale)
+          .tickSize(2 * paddingY - height)
 
-        var yAxis = d3.svg.axis()
+        var yAxis = d3
+            .axisLeft()
             .scale(scales['y'].d3Scale)
             .tickSize(2 * paddingX - width)
-            .orient('left');
 
         svg.append('g')
             .attr('class', 'x axis')
@@ -403,11 +403,18 @@
     }
 
     AreaGeometry.prototype.render = function (g, data, layer, scales) {
-        var area = d3.svg.area()
-            .x(function (d) { return layer.aestheticValue(scales, d, 'x') })
-            .y1(function (d) { return layer.aestheticValue(scales, d, 'y', 'y1') })
-            .y0(function (d) { return layer.aestheticValue(scales, d, 'y', 'y0') })
-            .interpolate(this.smooth ? 'basis' : 'linear');
+        var area = d3
+          .area()
+          .x(function(d) {
+            return layer.aestheticValue(scales, d, 'x')
+          })
+          .y1(function(d) {
+            return layer.aestheticValue(scales, d, 'y', 'y1')
+          })
+          .y0(function(d) {
+            return layer.aestheticValue(scales, d, 'y', 'y0')
+          })
+          .curve(this.smooth ? d3.curveBasis : d3.curveLinear)
 
         groups(g, 'lines', data).selectAll('polyline')
             .data(function(d) { return [d]; })
@@ -450,10 +457,15 @@
             return g ? 'line ' + g : 'line';
         }
 
-        var line = d3.svg.line()
-            .x(function (d) { return scale(d, 'x') })
-            .y(function (d) { return scale(d, 'y') })
-            .interpolate(this.smooth ? 'basis' : 'linear');
+        var line = d3
+          .line()
+          .x(function(d) {
+            return scale(d, 'x')
+          })
+          .y(function(d) {
+            return scale(d, 'y')
+          })
+          .curve(this.smooth ? d3.curveBasis : d3.curveLinear)
 
         groups(g, 'lines', data).selectAll('polyline')
             .data(function(d) { return [d]; })
@@ -630,10 +642,15 @@
                 ];
             }
 
-            var line = d3.svg.line()
-                .x(function (d) { return d.x })
-                .y(function (d) { return d.y })
-                .interpolate('linear');
+            var line = d3
+              .line()
+              .x(function(d) {
+                return d.x
+              })
+              .y(function(d) {
+                return d.y
+              })
+              .curve(d3.curveLinear)
 
             s.append('svg:path')
                 .attr('class', 'arrow')
@@ -754,7 +771,7 @@
         return this.d3Scale(v);
     };
 
-    function LinearScale () { this.d3Scale = d3.scale.linear(); }
+    function LinearScale () { this.d3Scale = d3.scaleLinear() }
 
     LinearScale.prototype = new Scale();
 
@@ -762,11 +779,11 @@
 
     TimeScale.prototype = new Scale();
 
-    function LogScale () { this.d3Scale = d3.scale.log(); }
+    function LogScale () { this.d3Scale = d3.scaleLog(); }
 
     LogScale.prototype = new Scale();
 
-    function CategoricalScale () { this.d3Scale = d3.scale.ordinal(); }
+    function CategoricalScale () { this.d3Scale = d3.scaleOrdinal(); }
 
     CategoricalScale.prototype = new Scale();
 
@@ -785,10 +802,10 @@
     CategoricalScale.prototype.range = function (interval) {
         // Setting padding to 1 seems to be required to get bars to
         // line up with axis ticks. Needs more investigation.
-        this.d3Scale = this.d3Scale.rangeRoundBands(interval, 1);
+        this.d3Scale = this.d3Scale.range(interval, 1);
     };
 
-    function ColorScale() { this.d3Scale = d3.scale.category20(); }
+    function ColorScale() { this.d3Scale = d3.scaleOrdinal(d3.schemeCategory20) }
 
     ColorScale.prototype = new Scale();
 
@@ -825,16 +842,16 @@
 
     BinStatistic.prototype.compute = function (data) {
         var values = _.pluck(data, this.variable);
-        var histogram = d3.layout.histogram().bins(this.bins);
+        var histogram = d3.histogram().thresholds(this.bins);
         var frequency = histogram(values);
-        histogram.frequency(false);
+        //histogram.frequency(false);
         var density = histogram(values);
         return _.map(frequency, function (bin, i) {
             return {
                 bin: i,
-                count: bin.y,
-                density: density[i].y,
-                ncount: bin.y / data.length || 0
+                count: bin.length,
+                density: density[i].length,
+                ncount: bin.length / data.length || 0
                 // Not clear to me how to implement the ndensity metric
                 //ndensity: null
             };
